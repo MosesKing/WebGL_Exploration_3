@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      background-color: #0xfffbf0;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <script src="JS/three.js"></script>
+  <script src="http://brangerbriz.net/labs/threejs_playGnd/js/Detector.js"></script>
+ <script src="http://brangerbriz.net/labs/threejs_playGnd/js/AsciiEffect.js"></script>
+  <script>
+   if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+			
+			var camera, scene, renderer;
+			var geometry, material, mesh;
+
+			function setup() {
+
+				var W = window.innerWidth, H = window.innerHeight;
+				renderer = new THREE.WebGLRenderer( { preserveDrawingBuffer: true } );
+                   
+                effect = new THREE.AsciiEffect( renderer );
+				effect.setSize( W, H );
+				renderer.autoClearColor = false;
+
+				renderer.setSize( W, H );
+				document.body.appendChild( renderer.domElement );
+
+				camera = new THREE.PerspectiveCamera( 143, W/H, 1, 10000 );
+				camera.position.z = 100;
+             
+				scene = new THREE.Scene();
+				
+				
+				
+				bg = document.body.style;
+				bg.background = '#0xfffbf0';
+				
+				scene.fog = new THREE.Fog( 0xfffbf0, 0, 900 );
+
+				
+				geometry = new THREE.Geometry();
+				for ( i = 0; i < 3333; i ++ ) {
+					var vertex = new THREE.Vector3();
+					vertex.x = 2000 * Math.random() - -450;
+					vertex.y = 2000 * Math.random() - 350;
+					vertex.z = 2000 * Math.random() - 690;
+					geometry.vertices.push( vertex );
+				}
+				material = new THREE.ParticleBasicMaterial( { size: 13, sizeAttenuation: true, transparent: false } );
+				material.color.setHex( 0xffffff );
+				particles = new THREE.ParticleSystem( geometry, material );
+				particles.sortParticles = true;
+				scene.add( particles );
+
+
+			}
+
+			function draw() {
+				
+				particles.rotation.y = Date.now() * 0.00023333333333;
+				particles.rotation.x = Date.now() * 0.0001;
+				particles.rotation.z = Date.now() * 0.000005;
+
+
+
+
+
+
+
+				requestAnimationFrame( draw );
+				
+				// experiment with code from the snippets menu here
+				
+				var time = Date.now() * 0.1;
+				h = ( 360 * ( 1.0 + time ) % 360 ) / 360;
+				material.color.setHSL( h, 0.5, 0.5 );
+
+				renderer.render( scene, camera );
+
+			}
+
+			setup();
+			draw();
+  </script>
+
+</body>
+
+</html>
